@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { ListGroup, Container, Navbar, Table } from 'react-bootstrap';
+import { ListGroup, Container, Navbar, Table, Form, Col, Button } from 'react-bootstrap';
 
 import { generatePassword } from './password';
 
@@ -20,7 +20,21 @@ const Home = () => (
       <Navbar.Brand>Password Generator</Navbar.Brand>
     </Navbar>
     <Container>
-      <p>ここに生成オプション</p>
+      <Form className="my-2">
+        <Form.Row>
+          <Form.Group as={Col}>
+            <Form.Label>生成個数</Form.Label>
+            <Form.Control type="number" value={N} />
+          </Form.Group>
+          <Form.Group as={Col}>
+            <Form.Label>文字数</Form.Label>
+            <Form.Control type="number" value="20" />
+          </Form.Group>
+        </Form.Row>
+        <Button variant="primary" onClick={() => alert('押すなって！')}>
+          生成
+        </Button>
+      </Form>
       <ListGroup>
         <Table bordered>
           {numbers.map((number) => (
