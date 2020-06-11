@@ -1,0 +1,44 @@
+{
+  "name": "password-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "dist": "webpack --mode=production",
+    "lint": "eslint . --ext .ts --ext .tsx --ext .html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ttk1/password-generator.git"
+  },
+  "author": "tama@ttk1.net",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ttk1/password-generator/issues"
+  },
+  "homepage": "https://github.com/ttk1/password-generator#readme",
+  "devDependencies": {
+    "@types/react": "^16.9.35",
+    "@types/react-bootstrap": "^1.0.1",
+    "@types/react-dom": "^16.9.8",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
+    "bootstrap": "^4.5.0",
+    "css-loader": "^3.5.3",
+    "eslint": "^7.1.0",
+    "eslint-plugin-html": "^6.0.2",
+    "eslint-plugin-react": "^7.20.0",
+    "jquery": "^3.5.1",
+    "popper.js": "^1.16.1",
+    "react": "^16.13.1",
+    "react-bootstrap": "^1.0.1",
+    "react-dom": "^16.13.1",
+    "style-loader": "^1.2.1",
+    "ts-loader": "^7.0.5",
+    "typescript": "^3.9.5",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
