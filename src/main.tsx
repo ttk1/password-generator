@@ -7,28 +7,32 @@ import { Container, Navbar, Table, Form, Row, Col, Button, Card } from 'react-bo
 
 import { generatePassword } from './password';
 
-const defaultPasswordCount = 50;
+const defaultPasswordCount = 20;
 const defaultPasswordLength = 20;
 
-const MyForm = (props: { onSubmit: (passwords: number, passwordLength: number) => void }) => {
-  const [passwords, setPasswords] = React.useState(defaultPasswordCount);
+const MyForm = (props: { onSubmit: (passwordCount: number, passwordLength: number) => void }) => {
+  const [passwordCount, setPasswordCount] = React.useState(defaultPasswordCount);
   const [passwordLength, setPasswordLength] = React.useState(defaultPasswordLength);
 
   return (
     <Form className="my-2">
       <Form.Group as={Row}>
-        <Form.Label column sm={2}>生成個数</Form.Label>
+        <Form.Label column sm={2}>生成する個数</Form.Label>
         <Col>
-          <Form.Control type="number" value={passwords} onChange={(event) => setPasswords(Number(event.target.value))} />
+          {[20, 50, 100].map((value) => (
+            <Form.Check type="radio" id={'radio-password-count-' + value} label={value} value={value} key={value} onChange={() => setPasswordCount(Number(value))} checked={passwordCount == value} />
+          ))}
         </Col>
       </Form.Group>
       <Form.Group as={Row}>
         <Form.Label column sm={2}>パスワード長</Form.Label>
         <Col>
-          <Form.Control type="number" value={passwordLength} onChange={(event) => setPasswordLength(Number(event.target.value))} />
+          {[8, 12, 16, 20].map((value) => (
+            <Form.Check type="radio" id={'radio-password-length-' + value} label={value} value={value} key={value} onChange={() => setPasswordLength(Number(value))} checked={passwordLength == value} />
+          ))}
         </Col>
       </Form.Group>
-      <Button type="submit" variant="primary" onClick={(event) => { event.preventDefault(); props.onSubmit(passwords, passwordLength); }}>
+      <Button type="submit" variant="primary" onClick={(event) => { event.preventDefault(); props.onSubmit(passwordCount, passwordLength); }}>
         生成
       </Button>
     </Form>
