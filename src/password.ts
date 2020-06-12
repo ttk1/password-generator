@@ -1,3 +1,3 @@
 export function generatePassword(): string {
-  return 'hogehoge';
+  return 'hogehoge12345678WWWW';
 }

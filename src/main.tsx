@@ -3,14 +3,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { ListGroup, Container, Navbar, Table, Form, Row, Col, Button, Card } from 'react-bootstrap';
+import { Container, Navbar, Table, Form, Row, Col, Button, Card } from 'react-bootstrap';
 
 import { generatePassword } from './password';
 
 
-const N = 10;
 const numbers: number[] = [];
-for (let i = 0; i < N; i++) {
+for (let i = 0; i < 5; i++) {
   numbers.push(i);
 }
 
@@ -29,7 +28,7 @@ const Home = () => (
         <Form.Group as={Row}>
           <Form.Label column sm={2}>生成個数</Form.Label>
           <Col>
-            <Form.Control type="number" value={N} />
+            <Form.Control type="number" value={5} />
           </Col>
         </Form.Group>
         <Form.Group as={Row}>
@@ -42,19 +41,15 @@ const Home = () => (
           生成
         </Button>
       </Form>
-      <ListGroup>
-        <Table bordered>
-          {numbers.map((number) => (
-            <tr key={number}>
-              <td>{generatePassword()}</td>
-              <td>{generatePassword()}</td>
-              <td>{generatePassword()}</td>
-              <td>{generatePassword()}</td>
-              <td>{generatePassword()}</td>
-            </tr>
-          ))}
-        </Table>
-      </ListGroup>
+      <Table bordered>
+        {numbers.map((number) => (
+          <tr key={number}>
+            {numbers.map((number) => (
+              <td key={number}><pre className="m-0">{generatePassword()}</pre></td>
+            ))}
+          </tr>
+        ))}
+      </Table>
     </Container>
   </React.Fragment>
 );
