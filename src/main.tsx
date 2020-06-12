@@ -7,18 +7,12 @@ import { Container, Navbar, Table, Form, Row, Col, Button, Card } from 'react-bo
 
 import { generatePassword } from './password';
 
+const defaultPasswordCount = 50;
+const defaultPasswordLength = 20;
 
-function getArray(len: number) {
-  const arr: number[] = [];
-  for (let i = 0; i < len; i++) {
-    arr.push(i);
-  }
-  return arr;
-}
-
-const MyForm = (props: { rows: number; cols: number; passwordLength: number; onSubmit: (passwords: number, passwordLength: number) => void }) => {
-  const [passwords, setPasswords] = React.useState(props.rows * props.cols);
-  const [passwordLength, setPasswordLength] = React.useState(props.passwordLength);
+const MyForm = (props: { onSubmit: (passwords: number, passwordLength: number) => void }) => {
+  const [passwords, setPasswords] = React.useState(defaultPasswordCount);
+  const [passwordLength, setPasswordLength] = React.useState(defaultPasswordLength);
 
   return (
     <Form className="my-2">
@@ -41,26 +35,37 @@ const MyForm = (props: { rows: number; cols: number; passwordLength: number; onS
   );
 };
 
-const PasswordTable = (props: { rows: number; cols: number; passwordLength: number }) => (
-  <Table bordered>
-    {getArray(props.rows).map((number) => (
-      <tr key={number}>
-        {getArray(props.cols).map((number) => (
-          <td key={number}><pre className="m-0">{generatePassword(props.passwordLength)}</pre></td>
-        ))}
-      </tr>
-    ))}
-  </Table>
-);
+const PasswordTable = (props: { passwords: string[] }) => {
+  const rows: string[][] = [];
+  for (let i = 0; i < props.passwords.length; i += 5) {
+    rows.push(props.passwords.slice(i, i + 5));
+  }
+
+  return (
+    <Table>
+      {rows.map((row, index) => (
+        <tr key={index}>
+          {row.map((value, index) => (
+            <td key={index}><pre className="m-0">{value}</pre></td>
+          ))}
+        </tr>
+      ))}
+    </Table>
+  );
+};
 
 const Layout = () => {
-  const [rows, setRows] = React.useState(10);
-  const [cols, setCols] = React.useState(5);
-  const [passwordLength, setPasswordLength] = React.useState(20);
-  const onSubmit = (passwords: number, passwordLength: number) => {
-    setRows(passwords / 5);
-    setCols(5);
-    setPasswordLength(passwordLength);
+  function generatePasswords(passwordCount: number, passwordLength: number) {
+    const passwords: string[] = [];
+    for (let i = 0; i < passwordCount; i++) {
+      passwords.push(generatePassword(passwordLength));
+    }
+    return passwords;
+  }
+
+  const [passwords, setPasswords] = React.useState(generatePasswords(defaultPasswordCount, defaultPasswordLength));
+  const onSubmit = (passwordCount: number, passwordLength: number) => {
+    setPasswords(generatePasswords(passwordCount, passwordLength));
   };
 
   return (
@@ -80,8 +85,8 @@ const Layout = () => {
             </Card.Text>
           </Card.Body>
         </Card>
-        <MyForm rows={rows} cols={cols} passwordLength={passwordLength} onSubmit={onSubmit} />
-        <PasswordTable rows={rows} cols={cols} passwordLength={passwordLength} />
+        <MyForm onSubmit={onSubmit} />
+        <PasswordTable passwords={passwords} />
       </Container>
     </React.Fragment>
   );
