@@ -74,10 +74,11 @@ const Layout = () => {
 
   return (
     <React.Fragment>
-      <Navbar bg="light" variant="light">
-        <Navbar.Brand>Password Generator</Navbar.Brand>
-      </Navbar>
       <Container>
+        <Navbar>
+          <Navbar.Brand>Password Generator</Navbar.Brand>
+          <a className="text-dark ml-auto" href="https://github.com/ttk1/password-generator">GitHub</a>
+        </Navbar>
         <Card bg="light" className="my-2">
           <Card.Body>
             <Card.Title>
