@@ -5,11 +5,11 @@ module.exports = {
     index: './src/main.tsx'
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'docs'),
     filename: 'index.js'
   },
   devServer: {
-    contentBase: 'public',
+    contentBase: 'docs',
     port: 3000
   },
   resolve: {
