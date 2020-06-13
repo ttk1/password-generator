@@ -9,7 +9,7 @@ import { generatePassword } from './password';
 
 const defaultPasswordCount = 20;
 const defaultPasswordLength = 20;
-const defaultRowCount = 5;
+const defaultColCount = 5;
 
 const MyForm = (props: { onSubmit: (passwordCount: number, passwordLength: number) => void; handleDownload: () => void }) => {
   const [passwordCount, setPasswordCount] = React.useState(defaultPasswordCount);
@@ -45,8 +45,8 @@ const MyForm = (props: { onSubmit: (passwordCount: number, passwordLength: numbe
 
 function splitPasswordArray(passwords: string[]): string[][] {
   const rows: string[][] = [];
-  for (let i = 0; i < passwords.length; i += defaultRowCount) {
-    rows.push(passwords.slice(i, i + defaultRowCount));
+  for (let i = 0; i < passwords.length; i += defaultColCount) {
+    rows.push(passwords.slice(i, i + defaultColCount));
   }
   return rows;
 }
