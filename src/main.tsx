@@ -9,8 +9,9 @@ import { generatePassword } from './password';
 
 const defaultPasswordCount = 20;
 const defaultPasswordLength = 20;
+const defaultRowCount = 5;
 
-const MyForm = (props: { onSubmit: (passwordCount: number, passwordLength: number) => void }) => {
+const MyForm = (props: { onSubmit: (passwordCount: number, passwordLength: number) => void; handleDownload: () => void }) => {
   const [passwordCount, setPasswordCount] = React.useState(defaultPasswordCount);
   const [passwordLength, setPasswordLength] = React.useState(defaultPasswordLength);
 
@@ -32,22 +33,28 @@ const MyForm = (props: { onSubmit: (passwordCount: number, passwordLength: numbe
           ))}
         </Col>
       </Form.Group>
-      <Button type="submit" variant="primary" onClick={(event) => { event.preventDefault(); props.onSubmit(passwordCount, passwordLength); }}>
+      <Button type="submit" variant="primary" className="mx-1" onClick={(event) => { event.preventDefault(); props.onSubmit(passwordCount, passwordLength); }}>
         生成
+      </Button>
+      <Button type="button" variant="secondary" className="mx-1" onClick={props.handleDownload}>
+        ダウンロード
       </Button>
     </Form>
   );
 };
 
-const PasswordTable = (props: { passwords: string[] }) => {
+function splitPasswordArray(passwords: string[]): string[][] {
   const rows: string[][] = [];
-  for (let i = 0; i < props.passwords.length; i += 5) {
-    rows.push(props.passwords.slice(i, i + 5));
+  for (let i = 0; i < passwords.length; i += defaultRowCount) {
+    rows.push(passwords.slice(i, i + defaultRowCount));
   }
+  return rows;
+}
 
+const PasswordTable = (props: { passwords: string[] }) => {
   return (
     <Table>
-      {rows.map((row, index) => (
+      {splitPasswordArray(props.passwords).map((row, index) => (
         <tr key={index}>
           {row.map((value, index) => (
             <td key={index}><pre className="m-0">{value}</pre></td>
@@ -72,6 +79,25 @@ const Layout = () => {
     setPasswords(generatePasswords(passwordCount, passwordLength));
   };
 
+  const handleDownload = () => {
+    const blob = new Blob([splitPasswordArray(passwords).map((row) => row.join('\t')).join('\n')], { type: 'text/plain' });
+    const blobUrl = URL.createObjectURL(blob);
+
+    // aタグを作って無理やりダウンロード
+    const a = document.body.appendChild(
+      document.createElement('a')
+    );
+    a.href = blobUrl;
+    a.download = 'passwords.tsv';
+    a.click();
+    document.body.removeChild(a);
+
+    // ちょっと時間空けてrevokeObjectURL
+    setTimeout(() => {
+      URL.revokeObjectURL(blobUrl);
+    }, 1000);
+  };
+
   return (
     <Container>
       <Navbar>
@@ -89,7 +115,7 @@ const Layout = () => {
             </Card.Text>
         </Card.Body>
       </Card>
-      <MyForm onSubmit={onSubmit} />
+      <MyForm onSubmit={onSubmit} handleDownload={handleDownload} />
       <PasswordTable passwords={passwords} />
     </Container>
   );
