@@ -73,27 +73,25 @@ const Layout = () => {
   };
 
   return (
-    <React.Fragment>
-      <Container>
-        <Navbar>
-          <Navbar.Brand>Password Generator</Navbar.Brand>
-          <a className="text-dark ml-auto" href="https://github.com/ttk1/password-generator">GitHub</a>
-        </Navbar>
-        <Card bg="light" className="my-2">
-          <Card.Body>
-            <Card.Title>
-              免責事項
+    <Container>
+      <Navbar>
+        <Navbar.Brand>Password Generator</Navbar.Brand>
+        <a className="text-dark ml-auto" href="https://github.com/ttk1/password-generator">GitHub</a>
+      </Navbar>
+      <Card bg="light" className="my-2">
+        <Card.Body>
+          <Card.Title>
+            免責事項
             </Card.Title>
-            <Card.Text>
-              生成したパスワードを使用したことによって生じた結果について、いかなる責任も負いません。
-              使用は自己責任でお願いします。
+          <Card.Text>
+            生成したパスワードを使用したことによって生じた結果について、いかなる責任も負いません。
+            使用は自己責任でお願いします。
             </Card.Text>
-          </Card.Body>
-        </Card>
-        <MyForm onSubmit={onSubmit} />
-        <PasswordTable passwords={passwords} />
-      </Container>
-    </React.Fragment>
+        </Card.Body>
+      </Card>
+      <MyForm onSubmit={onSubmit} />
+      <PasswordTable passwords={passwords} />
+    </Container>
   );
 };
 
