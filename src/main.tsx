@@ -10,10 +10,45 @@ import { generatePassword } from './password';
 const defaultPasswordCount = 20;
 const defaultPasswordLength = 20;
 const defaultColCount = 5;
+const defaultPasswordChars = {
+  number: [
+    // 数字
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+  ],
+  alphabet: [
+    // 小文字アルファベット
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    // 大文字アルファベット
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+  ],
+  symbol: [
+    // 記号
+    '_', '\'', '"', '`', '=', '-', '^', '~', '<', '>', '(', ')', '[', ']', '{', '}', '.', ',', '\\', ':', ';', '+', '*', '%', '$', '#', '@', '|'
+  ]
+}
 
-const MyForm = (props: { onSubmit: (passwordCount: number, passwordLength: number) => void; handleDownload: () => void }) => {
+const MyForm = (props: {
+  onSubmit: (
+    passwordCount: number, passwordLength: number,
+    usePasswordCharsNumber: boolean, passwordCharsNumber: string,
+    usePasswordCharsAlphabet: boolean, passwordCharsAlphabet: string,
+    usePasswordCharsSymbol: boolean, passwordCharsSymbol: string
+  ) => void; handleDownload: () => void
+}) => {
   const [passwordCount, setPasswordCount] = React.useState(defaultPasswordCount);
   const [passwordLength, setPasswordLength] = React.useState(defaultPasswordLength);
+
+  // 数字
+  const [usePasswordCharsNumber, setUsePasswordCharsNumber] = React.useState(true);
+  const [passwordCharsNumber, setPasswordCharsNumber] = React.useState(defaultPasswordChars.number.join(''));
+
+  // 半角英字
+  const [usePasswordCharsAlphabet, setUsePasswordCharsAlphabet] = React.useState(true);
+  const [passwordCharsAlphabet, setPasswordCharsAlphabet] = React.useState(defaultPasswordChars.alphabet.join(''));
+
+  // 記号
+  const [usePasswordCharsSymbol, setUsePasswordCharsSymbol] = React.useState(true);
+  const [passwordCharsSymbol, setPasswordCharsSymbol] = React.useState(defaultPasswordChars.symbol.join(''));
 
   return (
     <Form className="my-2">
@@ -21,7 +56,7 @@ const MyForm = (props: { onSubmit: (passwordCount: number, passwordLength: numbe
         <Form.Label column sm={2}>生成する個数</Form.Label>
         <Col>
           {[20, 50, 100].map((value) => (
-            <Form.Check type="radio" id={'radio-password-count-' + value} label={value} value={value} key={value} onChange={() => setPasswordCount(Number(value))} checked={passwordCount == value} />
+            <Form.Check type="radio" id={'radio-password-count-' + value} label={value} key={value} onChange={() => setPasswordCount(Number(value))} checked={passwordCount == value} />
           ))}
         </Col>
       </Form.Group>
@@ -29,11 +64,47 @@ const MyForm = (props: { onSubmit: (passwordCount: number, passwordLength: numbe
         <Form.Label column sm={2}>パスワード長</Form.Label>
         <Col>
           {[8, 12, 16, 20].map((value) => (
-            <Form.Check type="radio" id={'radio-password-length-' + value} label={value} value={value} key={value} onChange={() => setPasswordLength(Number(value))} checked={passwordLength == value} />
+            <Form.Check type="radio" id={'radio-password-length-' + value} label={value} key={value} onChange={() => setPasswordLength(Number(value))} checked={passwordLength == value} />
           ))}
         </Col>
       </Form.Group>
-      <Button type="submit" variant="primary" className="mx-1" onClick={(event) => { event.preventDefault(); props.onSubmit(passwordCount, passwordLength); }}>
+      <Form.Group as={Row}>
+        <Form.Label column sm={2}>使用する文字</Form.Label>
+        <Col>
+          <Form.Row>
+            <Col sm={2}>
+              <Form.Check type="checkbox" id={'checkbox-password-chars-number'} label="数字" onChange={() => setUsePasswordCharsNumber(!usePasswordCharsNumber)} checked={usePasswordCharsNumber} />
+            </Col>
+            <Col sm={10}>
+              <Form.Control size="sm" type="text" className="my-1" onChange={(event) => setPasswordCharsNumber(event.target.value)} value={passwordCharsNumber} />
+            </Col>
+          </Form.Row>
+          <Form.Row>
+            <Col sm={2}>
+              <Form.Check type="checkbox" id={'checkbox-password-chars-alphabet'} label="英字" onChange={() => setUsePasswordCharsAlphabet(!usePasswordCharsAlphabet)} checked={usePasswordCharsAlphabet} />
+            </Col>
+            <Col sm={10}>
+              <Form.Control size="sm" type="text" className="my-1" onChange={(event) => setPasswordCharsAlphabet(event.target.value)} value={passwordCharsAlphabet} />
+            </Col>
+          </Form.Row>
+          <Form.Row>
+            <Col sm={2}>
+              <Form.Check type="checkbox" id={'checkbox-password-chars-symbol'} label="記号" onChange={() => setUsePasswordCharsSymbol(!usePasswordCharsSymbol)} checked={usePasswordCharsSymbol} />
+            </Col>
+            <Col sm={10}>
+              <Form.Control size="sm" type="text" className="my-1" onChange={(event) => setPasswordCharsSymbol(event.target.value)} value={passwordCharsSymbol} />
+            </Col>
+          </Form.Row>
+        </Col>
+      </Form.Group>
+      <Button type="submit" variant="primary" className="mx-1" onClick={(event) => {
+        event.preventDefault(); props.onSubmit(
+          passwordCount, passwordLength,
+          usePasswordCharsNumber, passwordCharsNumber,
+          usePasswordCharsAlphabet, passwordCharsAlphabet,
+          usePasswordCharsSymbol, passwordCharsSymbol
+        );
+      }}>
         生成
       </Button>
       <Button type="button" variant="secondary" className="mx-1" onClick={props.handleDownload}>
@@ -66,17 +137,35 @@ const PasswordTable = (props: { passwords: string[] }) => {
 };
 
 const Layout = () => {
-  function generatePasswords(passwordCount: number, passwordLength: number) {
+  function generatePasswords(passwordCount: number, passwordLength: number, passwordChars: string[]) {
     const passwords: string[] = [];
     for (let i = 0; i < passwordCount; i++) {
-      passwords.push(generatePassword(passwordLength));
+      passwords.push(generatePassword(passwordLength, passwordChars));
     }
     return passwords;
   }
 
-  const [passwords, setPasswords] = React.useState(generatePasswords(defaultPasswordCount, defaultPasswordLength));
-  const onSubmit = (passwordCount: number, passwordLength: number) => {
-    setPasswords(generatePasswords(passwordCount, passwordLength));
+  const [passwords, setPasswords] = React.useState(generatePasswords(
+    defaultPasswordCount, defaultPasswordLength,
+    defaultPasswordChars.number.concat(defaultPasswordChars.alphabet).concat(defaultPasswordChars.symbol)
+  ));
+  const onSubmit = (
+    passwordCount: number, passwordLength: number,
+    usePasswordCharsNumber: boolean, passwordCharsNumber: string,
+    usePasswordCharsAlphabet: boolean, passwordCharsAlphabet: string,
+    usePasswordCharsSymbol: boolean, passwordCharsSymbol: string
+  ) => {
+    const passwordChars: string[] = [];
+    if (usePasswordCharsNumber) {
+      passwordChars.push(...passwordCharsNumber);
+    }
+    if (usePasswordCharsAlphabet) {
+      passwordChars.push(...passwordCharsAlphabet);
+    }
+    if (usePasswordCharsSymbol) {
+      passwordChars.push(...passwordCharsSymbol);
+    }
+    setPasswords(generatePasswords(passwordCount, passwordLength, passwordChars));
   };
 
   const handleDownload = () => {
