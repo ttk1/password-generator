@@ -72,27 +72,27 @@ const MyForm = (props: {
         <Form.Label column sm={2}>使用する文字</Form.Label>
         <Col>
           <Form.Row>
-            <Col sm={2}>
+            <Col sm={2} className="d-flex align-items-center">
               <Form.Check type="checkbox" id={'checkbox-password-chars-number'} label="数字" onChange={() => setUsePasswordCharsNumber(!usePasswordCharsNumber)} checked={usePasswordCharsNumber} />
             </Col>
             <Col sm={10}>
-              <Form.Control size="sm" type="text" className="my-1" onChange={(event) => setPasswordCharsNumber(event.target.value)} value={passwordCharsNumber} />
+              <code><Form.Control size="sm" type="text" className="my-1" onChange={(event) => setPasswordCharsNumber(event.target.value)} value={passwordCharsNumber} /></code>
             </Col>
           </Form.Row>
           <Form.Row>
-            <Col sm={2}>
+            <Col sm={2} className="d-flex align-items-center">
               <Form.Check type="checkbox" id={'checkbox-password-chars-alphabet'} label="英字" onChange={() => setUsePasswordCharsAlphabet(!usePasswordCharsAlphabet)} checked={usePasswordCharsAlphabet} />
             </Col>
             <Col sm={10}>
-              <Form.Control size="sm" type="text" className="my-1" onChange={(event) => setPasswordCharsAlphabet(event.target.value)} value={passwordCharsAlphabet} />
+              <code><Form.Control size="sm" type="text" className="my-1" onChange={(event) => setPasswordCharsAlphabet(event.target.value)} value={passwordCharsAlphabet} /></code>
             </Col>
           </Form.Row>
           <Form.Row>
-            <Col sm={2}>
+            <Col sm={2} className="d-flex align-items-center">
               <Form.Check type="checkbox" id={'checkbox-password-chars-symbol'} label="記号" onChange={() => setUsePasswordCharsSymbol(!usePasswordCharsSymbol)} checked={usePasswordCharsSymbol} />
             </Col>
             <Col sm={10}>
-              <Form.Control size="sm" type="text" className="my-1" onChange={(event) => setPasswordCharsSymbol(event.target.value)} value={passwordCharsSymbol} />
+              <code><Form.Control size="sm" type="text" className="my-1" onChange={(event) => setPasswordCharsSymbol(event.target.value)} value={passwordCharsSymbol} /></code>
             </Col>
           </Form.Row>
         </Col>
@@ -124,15 +124,19 @@ function splitPasswordArray(passwords: string[]): string[][] {
 
 const PasswordTable = (props: { passwords: string[] }) => {
   return (
-    <Table>
-      {splitPasswordArray(props.passwords).map((row, index) => (
-        <tr key={index}>
-          {row.map((value, index) => (
-            <td key={index}><pre className="m-0">{value}</pre></td>
+    <div className="table-responsive">
+      <Table>
+        <tbody>
+          {splitPasswordArray(props.passwords).map((row, index) => (
+            <tr key={index}>
+              {row.map((value, index) => (
+                <td key={index}><code className="m-0">{value}</code></td>
+              ))}
+            </tr>
           ))}
-        </tr>
-      ))}
-    </Table>
+        </tbody>
+      </Table>
+    </div>
   );
 };
 
@@ -197,11 +201,11 @@ const Layout = () => {
         <Card.Body>
           <Card.Title>
             免責事項
-            </Card.Title>
+          </Card.Title>
           <Card.Text>
             生成したパスワードを使用したことによって生じた結果について、いかなる責任も負いません。
             使用は自己責任でお願いします。
-            </Card.Text>
+          </Card.Text>
         </Card.Body>
       </Card>
       <MyForm onSubmit={onSubmit} handleDownload={handleDownload} />
