@@ -25,7 +25,7 @@ const defaultPasswordChars = {
     // 記号
     '_', '\'', '"', '`', '=', '-', '^', '~', '<', '>', '(', ')', '[', ']', '{', '}', '.', ',', '\\', ':', ';', '+', '*', '%', '$', '#', '@', '|'
   ]
-}
+};
 
 const MyForm = (props: {
   onSubmit: (
@@ -195,7 +195,7 @@ const Layout = () => {
     <Container>
       <Navbar>
         <Navbar.Brand>Password Generator</Navbar.Brand>
-        <a className="text-dark ml-auto" href="https://github.com/ttk1/password-generator">GitHub</a>
+        <a className="btn btn-dark ml-auto" href="https://github.com/ttk1/password-generator">GitHub</a>
       </Navbar>
       <Card bg="light" className="my-2">
         <Card.Body>
