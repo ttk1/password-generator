@@ -9,9 +9,12 @@ module.exports = {
     filename: 'index.js'
   },
   devServer: {
-    contentBase: 'docs',
+    static: {
+      directory: 'docs',
+    },
     port: 3000
   },
+  devtool: 'inline-source-map',
   resolve: {
     extensions: ['.ts', '.tx', '.js', '.json']
   },
